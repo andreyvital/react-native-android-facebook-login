@@ -1,4 +1,4 @@
-## `react-native-android-facebook-login`
+## `react-native-android-facebook-login` [![react-native-android-facebook-login](https://badge.fury.io/js/react-native-android-facebook-login.svg)](https://badge.fury.io/js/react-native-android-facebook-login)
 A react-native wrapper around facebook-android-sdk for authentication purposes.
 
 ### Key features
