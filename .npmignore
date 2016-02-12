@@ -4,3 +4,4 @@ android/android.iml
 android/build
 android/libs
 android/proguard-rules.pro
+sample/

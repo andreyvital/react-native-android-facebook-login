@@ -61,20 +61,26 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
                 return;
             }
 
-            WritableMap profileObjectMap = new WritableNativeMap();
-
-            profileObjectMap.putString("id", current.getId());
-            profileObjectMap.putString("name", current.getName());
-            profileObjectMap.putString("firstName", current.getFirstName());
-            profileObjectMap.putString("middleName", current.getMiddleName());
-            profileObjectMap.putString("lastName", current.getLastName());
-            profileObjectMap.putString("picture", current.getProfilePictureUri(200, 200).toString());
+            final WritableMap profileObjectMap = getProfileObjectMap(current);
 
             while (mProfilePromiseQueue.iterator().hasNext()) {
                 mProfilePromiseQueue.element().resolve(profileObjectMap);
                 mProfilePromiseQueue.remove();
             }
         }
+    }
+
+    private WritableMap getProfileObjectMap(Profile profile) {
+        WritableMap profileObjectMap = new WritableNativeMap();
+
+        profileObjectMap.putString("id", profile.getId());
+        profileObjectMap.putString("name", profile.getName());
+        profileObjectMap.putString("firstName", profile.getFirstName());
+        profileObjectMap.putString("middleName", profile.getMiddleName());
+        profileObjectMap.putString("lastName", profile.getLastName());
+        profileObjectMap.putString("picture", profile.getProfilePictureUri(200, 200).toString());
+
+        return profileObjectMap;
     }
 
     @Override
@@ -221,11 +227,19 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
 
     @ReactMethod
     public void getLoggedInUserProfile(final Promise promise) {
-        if (mProfilePromiseQueue.isEmpty()) {
-            Profile.fetchProfileForCurrentAccessToken();
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return;
+        }
+
+        Profile currentProfile = Profile.getCurrentProfile();
+
+        if (currentProfile != null) {
+            promise.resolve(getProfileObjectMap(currentProfile));
+            return;
         }
 
         mProfilePromiseQueue.offer(promise);
+        Profile.fetchProfileForCurrentAccessToken();
     }
 
     @ReactMethod

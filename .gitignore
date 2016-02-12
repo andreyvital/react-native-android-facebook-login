@@ -16,3 +16,4 @@ android/android.iml
 android/proguard-rules.pro
 android/build/
 node_modules
+sample/
