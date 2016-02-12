@@ -228,6 +228,7 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
     @ReactMethod
     public void getLoggedInUserProfile(final Promise promise) {
         if (AccessToken.getCurrentAccessToken() == null) {
+            promise.resolve(null);
             return;
         }
 

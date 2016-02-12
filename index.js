@@ -2,6 +2,7 @@
 import type { AccessToken } from './AccessToken'
 import type { FacebookLoginBehavior } from './FacebookLoginBehavior'
 import type { LoginResult } from './LoginResult'
+import type { UserProfile } from './UserProfile'
 import { NativeModules } from 'react-native'
 
 export default {
@@ -27,6 +28,10 @@ export default {
 
   getCurrentAccessToken(): Promise<?AccessToken> {
     return NativeModules.FacebookLogin.getCurrentAccessToken()
+  },
+
+  getLoggedInUserProfile(): Promise<?UserProfile> {
+    return NativeModules.FacebookLogin.getCurrentLoggedInUserProfile()
   },
 
   logInWithReadPermissions(
