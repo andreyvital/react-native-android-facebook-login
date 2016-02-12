@@ -1,0 +1,8 @@
+[ignore]
+.*/android/.*
+
+[include]
+
+[libs]
+
+[options]

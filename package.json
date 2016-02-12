@@ -1,0 +1,27 @@
+{
+  "name": "react-native-android-facebook-login",
+  "version": "0.1.0",
+  "description": "A react-native wrapper around facebook-android-sdk for authentication purposes",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CentaurWarchief/react-native-android-facebook-login.git"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "react-native",
+    "android",
+    "fb",
+    "facebook",
+    "login",
+    "android-facebook-sdk",
+    "authentication"
+  ],
+  "author": {
+    "name": "Andrey K. Vital",
+    "email": "andreykvital@gmail.com",
+    "url": "https://github.com/CentaurWarchief"
+  }
+}
