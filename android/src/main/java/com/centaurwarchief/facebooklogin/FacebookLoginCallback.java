@@ -28,6 +28,18 @@ public class FacebookLoginCallback implements FacebookCallback<LoginResult> {
 
         result.putBoolean("isCancelled", false);
 
+        result.putString("tokenString", loginResult.getAccessToken().getToken());
+
+        result.putArray(
+            "declinedPermissions",
+            FacebookLoginUtils.translatePermissionsSet(loginResult.getRecentlyDeniedPermissions())
+        );
+
+        result.putArray(
+            "grantedPermissions",
+            FacebookLoginUtils.translatePermissionsSet(loginResult.getRecentlyGrantedPermissions())
+        );
+
         mPromise.resolve(result);
         mPromise = null;
     }

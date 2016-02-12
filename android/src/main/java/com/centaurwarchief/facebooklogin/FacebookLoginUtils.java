@@ -5,15 +5,14 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableNativeArray;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 class FacebookLoginUtils {
-    public final static List<String> extractPermissionsFromReadableArray(
+    public final static Set<String> extractPermissionsFromReadableArray(
         ReadableArray unsafe
     ) {
-        List<String> permissions = new ArrayList<String>();
+        HashSet<String> permissions = new HashSet<String>();
 
         if (unsafe == null) {
             return permissions;
