@@ -12,6 +12,22 @@ Firstly, you need to download the library from npm:
 $ npm install --save react-native-android-facebook-login
 ```
 
+Then you should go to [developers.facebook.com](https://developers.facebook.com) and choose your app, then under **Settings** (*+Add Platform* if you don't have **Android** configured yet) you'll notice that `Key Hashes` will be empty:
+
+![Key Hashes (developers.facebook.com)](https://raw.githubusercontent.com/CentaurWarchief/react-native-android-facebook-login/master/res/1.png)
+
+To get your application key hash to fill in, in your JS code you can call: `__logCurrentApplicationSignature` to log it. For example:
+
+```JS
+componentDidMount() {
+  if (__DEV__) {
+    FacebookLogin.__logCurrentApplicationSignature()
+  }
+}
+```
+
+So, `$ adb logcat -s 'React'` and grab the logged key hash.
+
 Then, in your ***android/settings.gradle***:
 ```
 include ':ReactNativeAndroidFacebookLogin'
