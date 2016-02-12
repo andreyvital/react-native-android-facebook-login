@@ -116,6 +116,17 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
     }
 
     @ReactMethod
+    public void tryToRefreshCurrentAccessToken(final Promise promise) {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            promise.resolve(false);
+            return;
+        }
+
+        AccessToken.refreshCurrentAccessTokenAsync();
+        promise.resolve(true);
+    }
+
+    @ReactMethod
     public void getCurrentAccessToken(final Promise promise) {
         AccessToken token = AccessToken.getCurrentAccessToken();
 
@@ -137,6 +148,8 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
             result.putNull("lastRefreshedAt");
         }
 
+        result.putString("userId", token.getUserId());
+        result.putString("applicationId", token.getApplicationId());
         result.putString("tokenString", token.getToken());
 
         result.putArray(
