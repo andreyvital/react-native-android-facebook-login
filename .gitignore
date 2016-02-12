@@ -7,10 +7,11 @@
 /gradle
 gradlew*
 gradle.properties
-build.gradle
 settings.gradle
+build.gradle
+!android/build.gradle
 react-native-android-facebook-login.iml
 android/libs
 android/android.iml
 android/proguard-rules.pro
-android/build
+android/build/
