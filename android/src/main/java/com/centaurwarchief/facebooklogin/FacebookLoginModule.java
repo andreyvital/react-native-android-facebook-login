@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class FacebookLoginModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+public class FacebookLoginModule extends ReactContextBaseJavaModule implements ActivityEventListener, LifecycleEventListener {
     private static final String NATIVE_MODULE_NAME = "FacebookLogin";
 
     private static final String LOGIN_BEHAVIOR_NATIVE_WITH_FALLBACK = "LOGIN_BEHAVIOR_NATIVE_WITH_FALLBACK";
@@ -36,6 +36,7 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
         super(context);
 
         context.addActivityEventListener(this);
+        context.addLifecycleEventListener(this);
 
         FacebookSdk.sdkInitialize(context.getApplicationContext());
 
@@ -248,6 +249,24 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
                 Base64.DEFAULT
             )
         );
+    }
+
+    @Override
+    public void onHostResume() {
+        if (! mProfileTracker.isTracking()) {
+            mProfileTracker.startTracking();
+        }
+    }
+
+    @Override
+    public void onHostPause() {
+        if (mProfileTracker.isTracking()) {
+            mProfileTracker.stopTracking();
+        }
+    }
+
+    @Override
+    public void onHostDestroy() {
     }
 
     public void onActivityResult(
