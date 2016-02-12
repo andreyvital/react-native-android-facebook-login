@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
+import com.facebook.*;
 import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.react.bridge.*;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.common.ReactConstants;
 
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class FacebookLoginModule extends ReactContextBaseJavaModule implements ActivityEventListener {
@@ -29,6 +29,8 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
     private ReactApplicationContext mContext;
     private FacebookLoginCallback mLoginCallback;
     private CallbackManager mCallbackManager;
+    private Queue<Promise> mProfilePromiseQueue;
+    private ProfileTracker mProfileTracker;
 
     public FacebookLoginModule(ReactApplicationContext context) {
         super(context);
@@ -37,14 +39,41 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
 
         FacebookSdk.sdkInitialize(context.getApplicationContext());
 
-        mContext         = context;
-        mLoginCallback   = new FacebookLoginCallback();
-        mCallbackManager = CallbackManager.Factory.create();
+        mContext             = context;
+        mLoginCallback       = new FacebookLoginCallback();
+        mCallbackManager     = CallbackManager.Factory.create();
+        mProfileTracker      = new ResolvingPromiseProfileTracker();
+        mProfilePromiseQueue = new LinkedList<Promise>();
+
+        mProfileTracker.startTracking();
 
         LoginManager.getInstance().registerCallback(
             mCallbackManager,
             mLoginCallback
         );
+    }
+
+    private class ResolvingPromiseProfileTracker extends ProfileTracker {
+        @Override
+        protected void onCurrentProfileChanged(Profile old, Profile current) {
+            if (mProfilePromiseQueue.isEmpty()) {
+                return;
+            }
+
+            WritableMap profileObjectMap = new WritableNativeMap();
+
+            profileObjectMap.putString("id", current.getId());
+            profileObjectMap.putString("name", current.getName());
+            profileObjectMap.putString("firstName", current.getFirstName());
+            profileObjectMap.putString("middleName", current.getMiddleName());
+            profileObjectMap.putString("lastName", current.getLastName());
+            profileObjectMap.putString("picture", current.getProfilePictureUri(200, 200).toString());
+
+            while (mProfilePromiseQueue.iterator().hasNext()) {
+                mProfilePromiseQueue.element().resolve(profileObjectMap);
+                mProfilePromiseQueue.remove();
+            }
+        }
     }
 
     @Override
@@ -187,6 +216,15 @@ public class FacebookLoginModule extends ReactContextBaseJavaModule implements A
             FacebookLoginUtils.extractPermissionsFromReadableArray(permissions),
             false
         );
+    }
+
+    @ReactMethod
+    public void getLoggedInUserProfile(final Promise promise) {
+        if (mProfilePromiseQueue.isEmpty()) {
+            Profile.fetchProfileForCurrentAccessToken();
+        }
+
+        mProfilePromiseQueue.offer(promise);
     }
 
     @ReactMethod
