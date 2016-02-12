@@ -1,0 +1,16 @@
+.gradle
+.idea
+/local.properties
+.DS_Store
+/build
+/captures
+/gradle
+gradlew*
+gradle.properties
+build.gradle
+settings.gradle
+react-native-android-facebook-login.iml
+android/libs
+android/android.iml
+android/proguard-rules.pro
+android/build
