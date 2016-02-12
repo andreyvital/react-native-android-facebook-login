@@ -14,6 +14,10 @@ public class FacebookLoginCallback implements FacebookCallback<LoginResult> {
         mPromise = promise;
     }
 
+    public boolean isAwaitingToRespond() {
+        return mPromise != null;
+    }
+
     @Override
     public void onSuccess(final LoginResult loginResult) {
         if (mPromise == null) {
