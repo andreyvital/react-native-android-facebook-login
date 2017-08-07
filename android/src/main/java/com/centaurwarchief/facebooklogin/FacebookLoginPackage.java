@@ -22,9 +22,4 @@ public class FacebookLoginPackage implements ReactPackage {
     public List<ViewManager> createViewManagers(ReactApplicationContext context) {
         return Collections.emptyList();
     }
-
-    @Override
-    public List<Class<? extends JavaScriptModule>> createJSModules() {
-        return Collections.emptyList();
-    }
 }
